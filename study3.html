@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>세 자릿수 나눗셈 개념 학습</title>
+    <style>
+        body {
+            font-family: "나눔고딕", "Malgun Gothic", sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f3e5f5; /* 연한 보라색 배경 */
+            color: #333;
+        }
+        h2 { color: #6a1b9a; margin-bottom: 30px; }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .concept-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #7b1fa2;
+            border-bottom: 2px solid #e1bee7;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* --- 시각화: 수 모형 스타일 --- */
+        .visual-area {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #f3e5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        /* 백의 모형 (큰 네모) */
+        .block-100 {
+            width: 50px; height: 50px;
+            background-color: #ce93d8; /* 보라색 */
+            border: 1px solid #7b1fa2;
+            display: inline-block; margin: 3px; border-radius: 4px;
+            vertical-align: middle;
+            text-align: center; line-height: 50px; color: white; font-weight: bold; font-size: 0.8em;
+        }
+
+        /* 십의 모형 */
+        .block-10 {
+            width: 15px; height: 50px;
+            background-color: #ffb74d; /* 주황색 */
+            border: 1px solid #e65100;
+            display: inline-block; margin: 2px; border-radius: 3px;
+            vertical-align: middle;
+        }
+
+        /* 일의 모형 */
+        .block-1 {
+            width: 15px; height: 15px;
+            background-color: #81c784; /* 초록색 */
+            border: 1px solid #2e7d32;
+            display: inline-block; margin: 2px; border-radius: 2px; vertical-align: bottom;
+        }
+
+        .group-box {
+            border: 2px dashed #9e9e9e; padding: 10px;
+            border-radius: 10px; text-align: center; background-color: white;
+            min-width: 130px;
+        }
+        .arrow-icon { font-size: 2em; color: #7b1fa2; font-weight: bold; }
+
+        /* --- 한국식 나눗셈 스타일 --- */
+        .math-table {
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 1.8em;
+            font-family: 'Courier New', monospace;
+            line-height: 1.2;
+        }
+        .math-table td {
+            padding: 2px 8px; /* 간격 조절 */
+            text-align: center;
+            width: 25px;
+            position: relative;
+        }
+        
+        .roof { border-bottom: 2px solid #333; }
+        .curved-wall { border-right: 2px solid #333; border-top-right-radius: 15px; }
+        .line-bottom { border-bottom: 2px solid #ccc; }
+        
+        /* 자릿수 색상 */
+        .hund-color { color: #8e24aa; font-weight: bold; } /* 백의 자리: 보라 */
+        .tens-color { color: #ef6c00; font-weight: bold; } /* 십의 자리: 주황 */
+        .units-color { color: #2e7d32; font-weight: bold; } /* 일의 자리: 초록 */
+        .remainder-text { color: red; font-weight: bold; }
+        .result-color { color: blue; font-weight: bold; }
+        
+        .explanation-text {
+            background-color: #f3e5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🍇 세 자릿수 나눗셈</h2>
+
+        <div class="box">
+            <div class="concept-title">1. 그림으로 이해하기 (363 ÷ 3)</div>
+            <p>백의 자리부터 차례대로 똑같이 나누어 줍니다.</p>
+
+            <div class="visual-area">
+                <div class="group-box">
+                    <div><strong>전체: 363</strong></div><br>
+                    <div class="block-100">100</div><div class="block-100">100</div><div class="block-100">100</div><br>
+                    <span class="block-10"></span><span class="block-10"></span><span class="block-10"></span>
+                    <span class="block-10"></span><span class="block-10"></span><span class="block-10"></span><br>
+                    <span class="block-1"></span><span class="block-1"></span><span class="block-1"></span>
+                </div>
+
+                <div class="arrow-icon">➡</div>
+
+                <div class="group-box" style="background-color: #fce4ec;">
+                    <div><strong>몫: 121</strong></div><br>
+                    <div class="block-100">100</div><br>
+                    <span class="block-10"></span><span class="block-10"></span><br>
+                    <span class="block-1"></span>
+                </div>
+            </div>
+            
+            <p class="explanation-text">
+                💡 백의 모형 3개를 3곳으로 나누면 <strong>1개</strong>씩,<br>
+                💡 십의 모형 6개를 3곳으로 나누면 <strong>2개</strong>씩,<br>
+                💡 일의 모형 3개를 3곳으로 나누면 <strong>1개</strong>씩 가집니다.<br>
+                따라서 몫은 <strong>121</strong>입니다.
+            </p>
+        </div>
+
+        <div class="box">
+            <div class="concept-title">2. 자릿수별로 계산하기 (369 ÷ 3)</div>
+            <p>백의 자리 → 십의 자리 → 일의 자리 순서로 계산합니다.</p>
+            
+            <div style="display: flex; justify-content: center; gap: 30px; align-items: flex-start;">
+                <table class="math-table">
+                    <tr>
+                        <td></td>
+                        <td class="roof hund-color">1</td>
+                        <td class="roof tens-color">2</td>
+                        <td class="roof units-color">3</td>
+                    </tr>
+                    <tr>
+                        <td class="curved-wall">3</td>
+                        <td>3</td>
+                        <td>6</td>
+                        <td>9</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="line-bottom hund-color">3</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>0</td>
+                        <td>6</td> <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="line-bottom tens-color">6</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>0</td>
+                        <td>9</td> </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="line-bottom units-color">9</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>0</td>
+                    </tr>
+                </table>
+
+                <div style="flex: 1;">
+                    <div class="explanation-text">
+                        <strong>1. 백의 자리 (<span class="hund-color">보라색</span>)</strong><br>
+                        3 ÷ 3 = 1
+                    </div>
+                    <div class="explanation-text" style="margin-top: 10px;">
+                        <strong>2. 십의 자리 (<span class="tens-color">주황색</span>)</strong><br>
+                        6을 내립니다. 6 ÷ 3 = 2
+                    </div>
+                    <div class="explanation-text" style="margin-top: 10px;">
+                        <strong>3. 일의 자리 (<span class="units-color">초록색</span>)</strong><br>
+                        9를 내립니다. 9 ÷ 3 = 3
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="concept-title">3. 복잡한 계산 도전! (457 ÷ 3)</div>
+            <p>나머지가 생기면 다음 자릿수로 넘겨줍니다(내림).</p>
+
+            <div style="display: flex; justify-content: center; gap: 30px; align-items: flex-start;">
+                <table class="math-table">
+                    <tr>
+                        <td></td>
+                        <td class="roof hund-color">1</td>
+                        <td class="roof tens-color">5</td>
+                        <td class="roof units-color">2</td>
+                    </tr>
+                    <tr>
+                        <td class="curved-wall">3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>7</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="line-bottom hund-color">3</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="color:red; font-weight:bold;">1</td> <td>5</td> <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="2" class="line-bottom tens-color" style="text-align: right; letter-spacing: 12px;">15</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>0</td>
+                        <td>7</td> </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="line-bottom units-color">6</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="remainder-text">1</td>
+                    </tr>
+                </table>
+
+                <div style="flex: 1;">
+                    <div class="explanation-text">
+                        <strong>1. 백의 자리</strong><br>
+                        4 ÷ 3 = 1 ... 1<br>
+                        남은 1은 <strong>100</strong>이므로 십의 자리로 갑니다.
+                    </div>
+                    <div class="explanation-text" style="margin-top: 10px;">
+                        <strong>2. 십의 자리</strong><br>
+                        남은 1과 5가 만나 <strong>15

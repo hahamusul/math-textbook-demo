@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>두 자릿수 나눗셈 개념 학습</title>
+    <style>
+        body {
+            font-family: "나눔고딕", "Malgun Gothic", sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #e3f2fd;
+            color: #333;
+        }
+        h2 { color: #1565c0; margin-bottom: 30px; }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .concept-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #0d47a1;
+            border-bottom: 2px solid #90caf9;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* --- 시각화: 수 모형 스타일 --- */
+        .visual-area {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #f1f8e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .block-10 {
+            width: 15px; height: 60px;
+            background-color: #ffb74d; border: 1px solid #e65100;
+            display: inline-block; margin: 2px; border-radius: 3px;
+        }
+        .block-1 {
+            width: 15px; height: 15px;
+            background-color: #81c784; border: 1px solid #2e7d32;
+            display: inline-block; margin: 2px; border-radius: 2px; vertical-align: bottom;
+        }
+        .group-box {
+            border: 2px dashed #9e9e9e; padding: 10px;
+            border-radius: 10px; text-align: center; background-color: white;
+        }
+        .arrow-icon { font-size: 2em; color: #1976d2; font-weight: bold; }
+
+        /* --- 한국식 나눗셈 스타일 --- */
+        .math-table {
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 1.8em;
+            font-family: 'Courier New', monospace;
+            line-height: 1.2;
+        }
+        .math-table td {
+            padding: 5px 10px;
+            text-align: center;
+            width: 30px;
+            position: relative;
+        }
+        
+        /* 몫이 들어가는 윗줄 */
+        .roof { border-bottom: 2px solid #333; }
+
+        /* 나누는 수의 오른쪽 곡선 */
+        .curved-wall {
+            border-right: 2px solid #333;
+            border-top-right-radius: 15px; 
+        }
+
+        .line-bottom { border-bottom: 2px solid #ccc; }
+        
+        .tens-color { color: #d81b60; font-weight: bold; } 
+        .units-color { color: #2e7d32; font-weight: bold; } 
+        .result-color { color: blue; font-weight: bold; }
+        
+        .explanation-text {
+            background-color: #e1f5fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🎨 그림으로 보는 나눗셈</h2>
+
+        <div class="box">
+            <div class="concept-title">1. 수 모형으로 나누기 (48 ÷ 2)</div>
+            <p>48을 2명에게 똑같이 나누어 주는 상황을 그림으로 봅시다.</p>
+
+            <div class="visual-area">
+                <div class="group-box">
+                    <div><strong>전체: 48</strong></div><br>
+                    <span class="block-10"></span><span class="block-10"></span>
+                    <span class="block-10"></span><span class="block-10"></span><br>
+                    <span class="block-1"></span><span class="block-1"></span>
+                    <span class="block-1"></span><span class="block-1"></span>
+                    <span class="block-1"></span><span class="block-1"></span>
+                    <span class="block-1"></span><span class="block-1"></span>
+                </div>
+                <div class="arrow-icon">➡</div>
+                <div class="group-box" style="background-color: #e3f2fd;">
+                    <div><strong>한 명당: 24</strong></div><br>
+                    <span class="block-10"></span><span class="block-10"></span><br>
+                    <span class="block-1"></span><span class="block-1"></span>
+                    <span class="block-1"></span><span class="block-1"></span>
+                </div>
+            </div>
+            <p class="explanation-text">
+                💡 십의 모형 4개를 2곳으로 나누면 <strong>2개</strong>씩,<br>
+                💡 일의 모형 8개를 2곳으로 나누면 <strong>4개</strong>씩 가집니다.<br>
+                따라서 몫은 <strong>24</strong>입니다.
+            </p>
+        </div>
+
+        <div class="box">
+            <div class="concept-title">2. 세로셈으로 계산하기 (48 ÷ 2)</div>
+            
+            <div style="display: flex; justify-content: center; gap: 40px; align-items: flex-start;">
+                <table class="math-table">
+                    <tr>
+                        <td></td>
+                        <td class="roof tens-color">2</td> <td class="roof units-color">4</td> </tr>
+                    <tr>
+                        <td class="curved-wall">2</td> <td>4</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="line-bottom tens-color">4</td> <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>0</td>
+                        <td>8</td> </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="line-bottom units-color">8</td> </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>0</td> </tr>
+                </table>
+
+                <div style="flex: 1;">
+                    <div class="explanation-text">
+                        <strong>1단계 (<span class="tens-color">분홍색</span>)</strong><br>
+                        십의 자리 4를 2로 나눕니다.<br>
+                        <strong>4 ÷ 2 = 2</strong> 이므로 위에 <span class="tens-color">2</span>를 씁니다.
+                    </div>
+                    <div class="explanation-text" style="margin-top: 10px;">
+                        <strong>2단계 (<span class="units-color">초록색</span>)</strong><br>
+                        일의 자리 8을 그대로 내립니다.<br>
+                        <strong>8 ÷ 2 = 4</strong> 이므로 위에 <span class="units-color">4</span>를 씁니다.<br>
+                        나머지는 0이 됩니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="concept-title">3. 내림이 있는 경우 (52 ÷ 4)</div>
+            <p>십의 자리에서 남은 수는 <strong>일의 자리로 내려서</strong> 함께 계산합니다.</p>
+
+            <div style="display: flex; justify-content: center; gap: 40px; align-items: flex-start;">
+                <table class="math-table">
+                    <tr>
+                        <td></td>
+                        <td class="roof tens-color">1</td>
+                        <td class="roof units-color">3</td>
+                    </tr>
+                    <tr>
+                        <td class="curved-wall">4</td>
+                        <td>5</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="line-bottom tens-color">4</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="result-color">1</td> <td>2</td> </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="2" class="line-bottom units-color" style="text-align: right; letter-spacing: 14px;">12</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>0</td>
+                    </tr>
+                </table>
+
+                <div style="flex: 1;">
+                    <div class="explanation-text">
+                        <strong>핵심 포인트 (<span class="result-color">파란색 1</span>)</strong><br>
+                        5를 4로 나누면 1번 들어가고<br>
+                        <strong>5 - 4 = 1</strong>, 즉 <strong>1이 남습니다.</strong>
+                    </div>
+                    <div class="explanation-text" style="margin-top: 10px;">
+                        이 남은 1은 <strong>10</strong>이므로,<br>
+                        일의 자리 2와 합쳐져 <strong>12</strong>가 됩니다.<br>
+                        이제 <strong>12 ÷ 4 = 3</strong>을 계산합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

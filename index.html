@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,71 +5,60 @@
     <title>탐구형 디지털 수학 교과서</title>
     <style>
         /* --- 기본 및 레이아웃 스타일 --- */
-        body {
-            margin: 0;
-            font-family: "나눔고딕", Arial, sans-serif;
-            background-color: #f5deb3;
-            color: #333;
-        }
-        main {
-            max-width: 900px;
-            background: white;
-            margin: 40px auto;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            text-align: center;
-            min-height: 500px; 
-        }
-        main h2 {
-            color: #8b4513;
-            font-size: 1.6em;
-        }
-        main p {
-            font-size: 1.1em;
-            line-height: 1.6;
-        }
+        body { margin: 0; font-family: "나눔고딕", Arial, sans-serif; background-color: #f5deb3; color: #333; }
+        main { max-width: 900px; background: white; margin: 40px auto; padding: 40px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); text-align: center; min-height: 500px; }
+        main h2 { color: #8b4513; font-size: 1.6em; }
+        main p { font-size: 1.1em; line-height: 1.6; }
         #content-wrapper { display: none; }
 
         /* --- 잠금 화면 --- */
-        #lock-screen {
-            position: fixed;
-            top:0; left:0; width:100%; height:100%;
-            background-color: #f5deb3; 
-            display:flex; flex-direction:column; justify-content:center; align-items:center;
-            z-index:2000; color:#8b4513;
-        }
-        #password-input { padding:12px; font-size:1.2em; width:200px; border:2px solid #deb887; border-radius:8px; margin-bottom:10px;}
-        #password-button { background-color:#deb887; color:white; border:none; padding:10px 20px; font-size:1.1em; cursor:pointer; border-radius:8px;}
+        #lock-screen { position: fixed; top:0; left:0; width:100%; height:100%; background-color: #f5deb3; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:2000; color:#8b4513; }
+        #password-input { padding:12px; font-size:1.2em; width:200px; border:2px solid #deb887; border-radius:8px; margin-bottom:10px; }
+        #password-button { background-color:#deb887; color:white; border:none; padding:10px 20px; font-size:1.1em; cursor:pointer; border-radius:8px; }
         #error-message { color:red; margin-top:10px; font-weight:bold; }
 
         /* --- 헤더 및 내비게이션 --- */
-        header { background-color:#deb887; padding:20px; text-align:center; position:sticky; top:0; z-index:1000;}
-        header h1 { margin:0; color:white; font-size:1.8em;}
+        header { background-color:#deb887; padding:20px; text-align:center; position:sticky; top:0; z-index:1000; }
+        header h1 { margin:0; color:white; font-size:1.8em; }
         nav ul { list-style:none; padding:0; margin:10px 0 0 0; display:flex; justify-content:center; gap:25px; }
         nav li { position:relative; }
-        nav a { text-decoration:none; color:white; font-weight:bold; padding:6px 12px; border-radius:6px; transition:background 0.3s; display:inline-block;}
+        nav a { text-decoration:none; color:white; font-weight:bold; padding:6px 12px; border-radius:6px; transition:background 0.3s; display:inline-block; }
         nav a:hover { background-color:#c49a6c; }
-        nav ul ul { display:none; position:absolute; top:40px; left:0; background-color:#deb887; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.2); padding:8px 0; min-width:190px;}
+        nav ul ul { display:none; position:absolute; top:40px; left:0; background-color:#deb887; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.2); padding:8px 0; min-width:190px; }
         nav ul ul a { color:white; padding:10px 15px; display:block; white-space:nowrap; }
         nav li:hover>ul { display:block; }
 
         /* --- 닉네임 & 채팅 --- */
         #nickname-setup { padding:50px; text-align:center; }
-        #nickname-input { padding:10px; font-size:1.1em; margin-bottom:15px; width:80%; max-width:300px; border:2px solid #deb887; border-radius:6px;}
-        #set-nickname-button { background-color:#8b4513; color:white; border:none; padding:10px 20px; font-size:1.1em; cursor:pointer; border-radius:8px;}
-        #chat-container { display:none; width:100%; max-width:600px; margin:0 auto; box-shadow:0 2px 5px rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; background-color:#fffaf0;}
-        #chat-messages { height:400px; overflow-y:auto; padding:15px; text-align:left; background-color:#fcf8f0;}
-        .user-message { background-color:#ffdcb7; margin-left:auto; text-align:right; padding:5px 10px; border-radius:8px; margin-bottom:5px;}
-        .system-message { background-color:#e0e0e0; margin-right:auto; padding:5px 10px; border-radius:8px; margin-bottom:5px;}
-        .message-sender { font-size:0.8em; font-weight:bold; color:#8b4513; margin-bottom:2px; display:block;}
-        #chat-input-area { display:flex; border-top:1px solid #ccc;}
-        #chat-input { flex-grow:1; padding:10px; border:none; font-size:1em; outline:none;}
-        #chat-send-button { background-color:#deb887; color:white; border:none; padding:10px 15px; cursor:pointer; font-weight:bold;}
+        #nickname-input { padding:10px; font-size:1.1em; margin-bottom:15px; width:80%; max-width:300px; border:2px solid #deb887; border-radius:6px; }
+        #set-nickname-button { background-color:#8b4513; color:white; border:none; padding:10px 20px; font-size:1.1em; cursor:pointer; border-radius:8px; }
+        #chat-container { display:none; width:100%; max-width:600px; margin:0 auto; box-shadow:0 2px 5px rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; background-color:#fffaf0; }
+        #chat-messages { height:400px; overflow-y:auto; padding:15px; text-align:left; background-color:#fcf8f0; }
+        .user-message { background-color:#ffdcb7; margin-left:auto; text-align:right; padding:5px 10px; border-radius:8px; margin-bottom:5px; }
+        .system-message { background-color:#e0e0e0; margin-right:auto; padding:5px 10px; border-radius:8px; margin-bottom:5px; }
+        .message-sender { font-size:0.8em; font-weight:bold; color:#8b4513; margin-bottom:2px; display:block; }
+        #chat-input-area { display:flex; border-top:1px solid #ccc; }
+        #chat-input { flex-grow:1; padding:10px; border:none; font-size:1em; outline:none; }
+        #chat-send-button { background-color:#deb887; color:white; border:none; padding:10px 15px; cursor:pointer; font-weight:bold; }
 
         /* --- 탐구 활동 iframe --- */
         #inquiry-iframe-container { width:100%; height:600px; max-width:900px; margin:0 auto; display:none; }
-        #division-iframe { width:100%; height:100%; border:1px solid #ccc; border-radius:10px;}
+        #division-iframe { width:100%; height:100%; border:1px solid #ccc; border-radius:10px; }
+
+        /* --- ★ 추가됨: 나의 학습 기록 스타일 --- */
+        #my-study-content { display: none; text-align: left; }
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: center; }
+        th { background-color: #ffcc80; color: #333; }
+
+        /* --- ★ 추가됨: 칭찬 배지 스타일 --- */
+        #badge-content { display: none; padding: 20px; background-color: #fff9c4; border-radius: 15px; text-align: center; }
+        .badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-top: 20px; }
+        .badge-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0.5; filter: grayscale(100%); transition: transform 0.3s; }
+        .badge-card.unlocked { opacity: 1; filter: grayscale(0%); border: 3px solid #ffd700; transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+        .badge-icon { font-size: 3.5em; display: block; margin-bottom: 10px; }
+        .badge-title { font-weight: bold; font-size: 1.1em; color: #333; }
+        .badge-desc { font-size: 0.9em; color: #666; }
 
         /* --- 푸터 --- */
         footer { text-align:center; padding:15px; background-color:#deb887; color:white; margin-top:60px; }
@@ -95,9 +83,9 @@
                 <li>
                     <a href="#">단원 학습 ▼</a>
                     <ul>
-                        <li><a href="#unit1">1단원. 나머지가 있는 나눗셈</a></li>
-                        <li><a href="#unit2">2단원. 곱셈과 나눗셈의 관계</a></li>
-                        <li><a href="#unit3">3단원. 나눗셈 문제 해결하기</a></li>
+                        <li><a href="#" onclick="showInquiry('study1.html'); return false;">1. 두 자릿수 (나머지 X)</a></li>
+                        <li><a href="#" onclick="showInquiry('study2.html'); return false;">2. 두 자릿수 (나머지 O)</a></li>
+                        <li><a href="#" onclick="showInquiry('study3.html'); return false;">3. 세 자릿수 나눗셈</a></li>
                     </ul>
                 </li>
                 <li>
@@ -105,7 +93,7 @@
                     <ul>
                         <li><a href="#" onclick="showInquiry('apple_division.html'); return false;">1. 사과 나누기</a></li>
                         <li><a href="#" onclick="showInquiry('sumo.html'); return false;">2. 수모형 조작하기</a></li>
-                        <li><a href="#" onclick="showInquiry('note.html'); return false;">3. 연습장 (Canvas)</a></li>
+                        <li><a href="#" onclick="showInquiry('drawing_pad.html'); return false;">3. 연습장 (Canvas)</a></li>
                     </ul>
                 </li>
                 <li>
@@ -116,7 +104,8 @@
                     </ul>
                 </li>
                 <li><a href="#" onclick="showChat(); return false;">토의·생각 나누기</a></li>
-                <li><a href="#">나의 학습</a></li>
+                <li><a href="#" onclick="showContent('badges'); return false;">칭찬 배지</a></li>
+                <li><a href="#" onclick="showContent('my_study'); return false;">나의 학습</a></li>
             </ul>
         </nav>
     </header>
@@ -136,18 +125,50 @@
             <button onclick="setNickname()" id="set-nickname-button">채팅 시작</button>
         </div>
         
-        <div id="quiz-2-digit-content" style="display: none;">
-            <h2>📝 두 자릿수 나눗셈 평가</h2>
-            <p>두 자릿수 나눗셈 실력을 점검해 봅시다! (평가 콘텐츠가 들어갈 영역입니다.)</p>
-        </div>
-        
-        <div id="quiz-3-digit-content" style="display: none;">
-            <h2>📝 세 자릿수 나눗셈 평가</h2>
-            <p>세 자릿수 나눗셈 실력을 점검해 봅시다! (평가 콘텐츠가 들어갈 영역입니다.)</p>
-        </div>
+        <div id="quiz-2-digit-content" style="display: none;"></div>
+        <div id="quiz-3-digit-content" style="display: none;"></div>
 
         <div id="inquiry-iframe-container">
             <iframe id="division-iframe" src="" title="탐구 활동"></iframe>
+        </div>
+
+        <div id="my-study-content">
+            <h2 style="color: #ff6f00;">📊 나의 학습 기록장</h2>
+            <div style="background: #fff3e0; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+                <p id="stats-text">데이터를 불러오는 중...</p>
+                <button onclick="clearHistory()" style="background: #ef5350; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">기록 초기화</button>
+            </div>
+            <table>
+                <thead><tr><th>날짜</th><th>유형</th><th>문제</th><th>결과</th><th>내 답</th></tr></thead>
+                <tbody id="history-table-body"></tbody>
+            </table>
+        </div>
+
+        <div id="badge-content">
+            <h2 style="color: #fbc02d;">🏆 나의 명예의 전당</h2>
+            <p>문제를 풀고 배지를 모아보세요!</p>
+            <div class="badge-grid">
+                <div class="badge-card" id="badge-1">
+                    <span class="badge-icon">🐣</span>
+                    <div class="badge-title">시작이 반</div>
+                    <div class="badge-desc">배지 화면에 처음 방문했어요.</div>
+                </div>
+                <div class="badge-card" id="badge-2">
+                    <span class="badge-icon">🎯</span>
+                    <div class="badge-title">첫 정답</div>
+                    <div class="badge-desc">평가 문제 1개를 맞혔어요.</div>
+                </div>
+                <div class="badge-card" id="badge-3">
+                    <span class="badge-icon">🔥</span>
+                    <div class="badge-title">끈기왕</div>
+                    <div class="badge-desc">5번 이상 도전했어요.</div>
+                </div>
+                <div class="badge-card" id="badge-4">
+                    <span class="badge-icon">👑</span>
+                    <div class="badge-title">나눗셈 마스터</div>
+                    <div class="badge-desc">3개 이상 맞혔어요.</div>
+                </div>
+            </div>
         </div>
 
         <div id="chat-container">
@@ -190,15 +211,21 @@
     }
     document.addEventListener('DOMContentLoaded', ()=>{ passwordInput.focus(); });
 
-    // --- 2. 섹션 전환 및 채팅 ---
+    // --- 2. 화면 전환 관리 ---
     const homeContent = document.getElementById('home-content');
     const chatContainer = document.getElementById('chat-container'); 
     const nicknameSetup = document.getElementById('nickname-setup');
     const inquiryIframeContainer = document.getElementById('inquiry-iframe-container');
     const quiz2DigitContent = document.getElementById('quiz-2-digit-content'); 
     const quiz3DigitContent = document.getElementById('quiz-3-digit-content'); 
-    const divisionIframe = document.getElementById('division-iframe'); // iframe 요소 자체
+    const divisionIframe = document.getElementById('division-iframe');
     
+    // ★ 추가된 변수들
+    const myStudyContent = document.getElementById('my-study-content');
+    const badgeContent = document.getElementById('badge-content');
+    const historyTableBody = document.getElementById('history-table-body');
+    const statsText = document.getElementById('stats-text');
+
     const chatMessages = document.getElementById('chat-messages');
     const chatInput = document.getElementById('chat-input');
     const nicknameInput = document.getElementById('nickname-input');
@@ -210,32 +237,38 @@
         nicknameSetup.style.display='none';
         inquiryIframeContainer.style.display='none';
         quiz2DigitContent.style.display='none'; 
-        quiz3DigitContent.style.display='none'; 
+        quiz3DigitContent.style.display='none';
+        myStudyContent.style.display='none'; // ★
+        badgeContent.style.display='none'; // ★
     }
 
-    // showContent 함수를 수정하여 '평가하기' 클릭 시 iframe으로 로드합니다.
     function showContent(section){
         hideAllSections();
         
         if(section==='home'){ 
             homeContent.style.display='block'; 
-            divisionIframe.src = ''; // iframe 비우기
+            divisionIframe.src = ''; 
         } 
-        
-        // '두 자릿수 나눗셈' 메뉴는 quiz_2_digit.html을 iframe에 로드합니다.
         else if(section==='quiz_2_digit'){
             inquiryIframeContainer.style.display='block';
-            divisionIframe.src = 'quiz_2_digit.html'; // 파일명 확인
+            divisionIframe.src = 'quiz_2_digit.html'; 
         } 
-        
-        // ★★★ '세 자릿수 나눗셈' 메뉴는 quiz_3_digit.html을 iframe에 로드합니다. (수정 완료)
         else if(section==='quiz_3_digit'){
             inquiryIframeContainer.style.display='block';
-            divisionIframe.src = 'quiz_3_digit.html'; // 실제 파일명 로드
+            divisionIframe.src = 'quiz_3_digit.html'; 
+        }
+        // ★ 나의 학습 보기
+        else if(section==='my_study'){
+            myStudyContent.style.display='block';
+            loadHistory();
+        }
+        // ★ 칭찬 배지 보기
+        else if(section==='badges'){
+            badgeContent.style.display='block';
+            checkAndUnlockBadges();
         }
     }
 
-    // showInquiry 함수는 탐구 활동 파일 로드를 위해 별도로 유지합니다.
     function showInquiry(fileName){
         hideAllSections();
         inquiryIframeContainer.style.display='block';
@@ -256,7 +289,7 @@
 
     function setNickname(){
         const nickname=nicknameInput.value.trim();
-        if(nickname.length<2 || nickname.length>10){ alert("닉네임은 2자 이상 10자 이하로 설정해 주세요."); nicknameInput.focus(); return; }
+        if(nickname.length<2 || nickname.length>10){ alert("닉네임은 2자 이상 10자 이하"); nicknameInput.focus(); return; }
         CURRENT_USER_NICKNAME=nickname;
         nicknameSetup.style.display='none';
         chatContainer.style.display='block';
@@ -290,7 +323,50 @@
         chatMessages.appendChild(bubble);
         chatMessages.scrollTop=chatMessages.scrollHeight;
     }
-</script>
 
+    // --- ★ 추가 기능: 학습 기록 및 배지 로직 ---
+    function loadHistory() {
+        const history = JSON.parse(localStorage.getItem('mathLearningHistory')) || [];
+        const total = history.length;
+        const correctCount = history.filter(item => item.isCorrect).length;
+        let score = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+        
+        statsText.innerHTML = `총 <strong>${total}</strong>문제 중 <strong>${correctCount}</strong>개 정답 (정답률: ${score}%)`;
+        historyTableBody.innerHTML = '';
+        
+        if (total === 0) {
+            historyTableBody.innerHTML = '<tr><td colspan="5" style="padding:20px;">아직 기록이 없습니다.</td></tr>';
+            return;
+        }
+        history.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.date}</td><td>${item.type}</td><td style="font-weight:bold;">${item.question}</td><td style="color:${item.isCorrect?'green':'red'};font-weight:bold;">${item.isCorrect?'⭕':'❌'}</td><td>${item.userAnswer}</td>`;
+            historyTableBody.appendChild(row);
+        });
+    }
+
+    function clearHistory() {
+        if(confirm("기록을 삭제할까요?")) {
+            localStorage.removeItem('mathLearningHistory');
+            loadHistory();
+        }
+    }
+
+    function checkAndUnlockBadges() {
+        const history = JSON.parse(localStorage.getItem('mathLearningHistory')) || [];
+        const totalTries = history.length;
+        const correctCount = history.filter(item => item.isCorrect).length;
+
+        unlockBadge('badge-1'); // 방문 배지
+        if (correctCount >= 1) unlockBadge('badge-2');
+        if (totalTries >= 5) unlockBadge('badge-3');
+        if (correctCount >= 3) unlockBadge('badge-4');
+    }
+
+    function unlockBadge(id) {
+        const el = document.getElementById(id);
+        if(el) el.classList.add('unlocked');
+    }
+</script>
 </body>
 </html>

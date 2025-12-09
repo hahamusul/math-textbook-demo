@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>나눗셈 수 모형 조작하기</title>
+  <style>
+    body {
+      background-color: #f3e8d5;
+      font-family: "Pretendard", sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      color: #5b3a29;
+      margin-top: 20px;
+    }
+
+    .model-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .model {
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      user-select: none;
+      border-radius: 6px;
+    }
+
+    /* 수 모형 크기 조정 */
+    .hundred {
+      width: 100px;
+      height: 100px; /* 100칸 느낌 */
+      background-color: #c97b2b;
+      font-size: 18px;
+    }
+
+    .ten {
+      width: 100px;
+      height: 30px; /* 10칸 느낌 */
+      background-color: #f0a500;
+      font-size: 16px;
+    }
+
+    .one {
+      width: 30px;
+      height: 30px; /* 1칸 느낌 */
+      background-color: #ffd369;
+      color: #5b3a29;
+      font-size: 14px;
+    }
+
+    .drop-zone {
+      width: 80%;
+      height: 300px;
+      margin: 0 auto;
+      border: 3px dashed #a27853;
+      border-radius: 15px;
+      background-color: #fff8ee;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .button-container {
+      margin: 20px;
+    }
+
+    button {
+      background-color: #a27853;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #8c5e3c;
+    }
+  </style>
+</head>
+<body>
+  <h1>💡 나눗셈 수 모형 조작하기</h1>
+
+  <div class="model-container">
+    <div class="model hundred" draggable="true" data-type="hundred">100</div>
+    <div class="model ten" draggable="true" data-type="ten">10</div>
+    <div class="model one" draggable="true" data-type="one">1</div>
+  </div>
+
+  <div class="drop-zone" id="dropZone">
+    <p style="color:#a27853; margin-top:130px;">이곳에 수 모형을 놓아보세요!</p>
+  </div>
+
+  <div class="button-container">
+    <button id="clearButton">🧹 지우기</button>
+  </div>
+
+  <script>
+    const models = document.querySelectorAll(".model");
+    const dropZone = document.getElementById("dropZone");
+    const clearButton = document.getElementById("clearButton");
+
+    let dragTarget = null;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    // 공통 드래그 설정 함수
+    function makeDraggable(el) {
+      el.draggable = true;
+
+      el.addEventListener("dragstart", (e) => {
+        dragTarget = el;
+        offsetX = e.offsetX;
+        offsetY = e.offsetY;
+        e.dataTransfer.setData("type", el.dataset.type);
+        e.dataTransfer.effectAllowed = "move";
+      });
+    }
+
+    models.forEach(makeDraggable);
+
+    dropZone.addEventListener("dragover", (e) => e.preventDefault());
+
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const rect = dropZone.getBoundingClientRect();
+      const type = e.dataTransfer.getData("type");
+
+      // 도구 상자에서 새로 드래그한 경우 (복사 생성)
+      if (!dropZone.contains(dragTarget)) {
+        const newModel = document.createElement("div");
+        newModel.classList.add("model", type);
+        newModel.dataset.type = type;
+        newModel.textContent =
+          type === "hundred" ? "100" : type === "ten" ? "10" : "1";
+        makeDraggable(newModel);
+
+        newModel.style.position = "absolute";
+        newModel.style.left = e.clientX - rect.left - offsetX + "px";
+        newModel.style.top = e.clientY - rect.top - offsetY + "px";
+
+        dropZone.appendChild(newModel);
+      } 
+      // 드롭존 안의 요소 이동
+      else {
+        dragTarget.style.left = e.clientX - rect.left - offsetX + "px";
+        dragTarget.style.top = e.clientY - rect.top - offsetY + "px";
+      }
+
+      dragTarget = null;
+    });
+
+    // 지우기 버튼
+    clearButton.addEventListener("click", () => {
+      dropZone.innerHTML = '<p style="color:#a27853; margin-top:130px;">이곳에 수 모형을 놓아보세요!</p>';
+    });
+  </script>
+</body>
+</html>
+

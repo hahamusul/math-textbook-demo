@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사과 나누기 탐구 활동</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+        #items-container {
+            min-height: 100px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 2px dashed #ccc;
+            background-color: #fff;
+            border-radius: 10px;
+        }
+        .apple {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            font-size: 30px;
+            cursor: grab;
+            margin: 5px;
+            user-select: none; /* 드래그 시 텍스트 선택 방지 */
+        }
+        #drop-zone-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .drop-zone {
+            width: 150px;
+            height: 150px;
+            border: 3px solid #FF5722;
+            background-color: #f7e3d9;
+            border-radius: 50%; /* 접시 모양 */
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            color: #FF5722;
+        }
+        .dragging {
+            opacity: 0.5;
+            border: 2px dashed red;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>사과 옮겨서 나누기 (6 ÷ 2)</h2>
+
+    <div id="items-container">
+        <span class="apple" draggable="true" id="apple1">🍎</span>
+        <span class="apple" draggable="true" id="apple2">🍎</span>
+        <span class="apple" draggable="true" id="apple3">🍎</span>
+        <span class="apple" draggable="true" id="apple4">🍎</span>
+        <span class="apple" draggable="true" id="apple5">🍎</span>
+        <span class="apple" draggable="true" id="apple6">🍎</span>
+    </div>
+
+    <p class="feedback" id="feedback-text">사과를 접시에 나누어 담아 보세요.</p>
+
+    <div id="drop-zone-container">
+        <div class="drop-zone" id="plate1">접시 1</div>
+        <div class="drop-zone" id="plate2">접시 2</div>
+    </div>
+    
+    <button onclick="checkDivision()" style="margin-top: 30px; padding: 10px 20px; font-size: 1.1em; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">결과 확인</button>
+
+
+    <script>
+        const apples = document.querySelectorAll('.apple');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const feedbackText = document.getElementById('feedback-text');
+        
+        let draggedItem = null;
+
+        // --- 1. 드래그 시작 이벤트 핸들러 ---
+        apples.forEach(apple => {
+            apple.addEventListener('dragstart', (e) => {
+                draggedItem = apple;
+                e.dataTransfer.setData('text/plain', apple.id);
+                setTimeout(() => {
+                    apple.classList.add('dragging');
+                }, 0);
+            });
+
+            apple.addEventListener('dragend', () => {
+                draggedItem.classList.remove('dragging');
+                draggedItem = null;
+            });
+        });
+
+        // --- 2. 드롭 영역 이벤트 핸들러 ---
+        dropZones.forEach(zone => {
+            // 드래그 요소가 위에 있을 때
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault(); // 기본 동작(드롭 금지) 취소
+            });
+
+            // 드롭 실행 시
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const data = e.dataTransfer.getData('text/plain');
+                const apple = document.getElementById(data);
+                
+                // 사과를 접시 안에 추가
+                zone.appendChild(apple);
+                apple.style.margin = '5px'; // 접시 안에서 간격 조정
+                feedbackText.textContent = '잘하고 있어요! 모든 사과를 나누어 담아 보세요.';
+            });
+        });
+        
+        // --- 3. 결과 확인 함수 ---
+        function checkDivision() {
+            const plate1 = document.getElementById('plate1').querySelectorAll('.apple').length;
+            const plate2 = document.getElementById('plate2').querySelectorAll('.apple').length;
+            const totalApples = plate1 + plate2;
+
+            if (totalApples < 6) {
+                feedbackText.textContent = `아직 사과 ${6 - totalApples}개가 남아있어요. 모두 옮겨주세요!`;
+            } else if (plate1 === 3 && plate2 === 3) {
+                feedbackText.textContent = '✨ 정답입니다! 사과 6개를 2접시에 똑같이 나누면 한 접시에 3개씩 담겨요. ✨';
+                feedbackText.style.color = 'green';
+            } else {
+                feedbackText.textContent = '🤔 다시 확인해 볼까요? 두 접시에 똑같이 나누어 담아야 합니다.';
+                feedbackText.style.color = 'red';
+            }
+        }
+
+    </script>
+</body>
+</html>
+

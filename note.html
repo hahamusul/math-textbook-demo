@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>연습장/캔버스 모드</title>
+    <style>
+        body {
+            font-family: "나눔고딕", Arial, sans-serif;
+            text-align: center;
+            padding: 15px;
+            background-color: #f0f0f0;
+        }
+        h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        #controls {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button, select, input[type="range"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        button {
+            background-color: #e0e0e0;
+        }
+        button:hover {
+            background-color: #d5d5d5;
+        }
+        #clear-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+        }
+        #clear-button:hover {
+            background-color: #d32f2f;
+        }
+        #drawingCanvas {
+            border: 2px solid #555;
+            background-color: white; /* 캔버스 배경은 흰색 */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <h2>🎨 나만의 연습장 (Draw Pad)</h2>
+    
+    <div id="controls">
+        <div class="control-group">
+            색상: <input type="color" id="colorPicker" value="#4A148C">
+        </div>
+        <div class="control-group">
+            굵기: <input type="range" id="lineWidth" min="1" max="50" value="5">
+        </div>
+        <div class="control-group">
+            <button id="eraser-button" onclick="setTool('eraser')">지우개</button>
+            <button id="pen-button" onclick="setTool('pen')">펜</button>
+        </div>
+        <button id="clear-button" onclick="clearCanvas()">모두 지우기</button>
+    </div>
+
+    <canvas id="drawingCanvas" width="800" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        const colorPicker = document.getElementById('colorPicker');
+        const lineWidthInput = document.getElementById('lineWidth');
+        
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let currentColor = colorPicker.value;
+        let currentTool = 'pen'; // 기본 도구는 펜
+
+        // 캔버스 초기 설정
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        // --- 이벤트 핸들러 ---
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        });
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseout', () => isDrawing = false);
+
+        colorPicker.addEventListener('input', (e) => {
+            currentColor = e.target.value;
+            if (currentTool === 'pen') {
+                 ctx.strokeStyle = currentColor;
+            }
+        });
+        
+        lineWidthInput.addEventListener('input', (e) => {
+             ctx.lineWidth = e.target.value;
+        });
+
+        // --- 그리기/지우기 함수 ---
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            ctx.beginPath();
+            
+            if (currentTool === 'pen') {
+                ctx.strokeStyle = currentColor;
+                ctx.globalCompositeOperation = 'source-over'; // 일반 그리기 모드
+            } else if (currentTool === 'eraser') {
+                ctx.strokeStyle = 'white'; // 지우개는 흰색으로 그림
+                ctx.globalCompositeOperation = 'destination-out'; // 지우기 모드 (투명하게 만듦)
+            }
+
+            ctx.lineWidth = lineWidthInput.value; 
+            
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // 지우기 후 펜 모드로 복귀 (혹시 지우개 모드였을 경우 대비)
+            setTool('pen'); 
+        }
+
+        function setTool(tool) {
+            currentTool = tool;
+            
+            // 펜 모드 설정
+            if (tool === 'pen') {
+                ctx.strokeStyle = currentColor;
+                ctx.globalCompositeOperation = 'source-over';
+                document.getElementById('pen-button').style.backgroundColor = '#d5d5d5';
+                document.getElementById('eraser-button').style.backgroundColor = '#e0e0e0';
+            } 
+            // 지우개 모드 설정
+            else if (tool === 'eraser') {
+                // 지우개는 흰색으로 그림 (캔버스가 흰색 배경일 경우)
+                ctx.strokeStyle = 'white'; 
+                ctx.globalCompositeOperation = 'destination-out'; // 지우개 효과
+                document.getElementById('eraser-button').style.backgroundColor = '#d5d5d5';
+                document.getElementById('pen-button').style.backgroundColor = '#e0e0e0';
+            }
+        }
+        
+        // 초기 펜 모드 설정
+        setTool('pen');
+    </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>탐구형 디지털 수학 교과서</title>
+    <style>
+        /* --- 기본 및 레이아웃 스타일 --- */
+        body {
+            margin: 0;
+            font-family: "나눔고딕", Arial, sans-serif;
+            background-color: #f5deb3;
+            color: #333;
+        }
+        main {
+            max-width: 900px;
+            background: white;
+            margin: 40px auto;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            text-align: center;
+            min-height: 500px; 
+        }
+        main h2 {
+            color: #8b4513;
+            font-size: 1.6em;
+        }
+        main p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        #content-wrapper { display: none; }
+
+        /* --- 잠금 화면 --- */
+        #lock-screen {
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background-color: #f5deb3; 
+            display:flex; flex-direction:column; justify-content:center; align-items:center;
+            z-index:2000; color:#8b4513;
+        }
+        #password-input { padding:12px; font-size:1.2em; width:200px; border:2px solid #deb887; border-radius:8px; margin-bottom:10px;}
+        #password-button { background-color:#deb887; color:white; border:none; padding:10px 20px; font-size:1.1em; cursor:pointer; border-radius:8px;}
+        #error-message { color:red; margin-top:10px; font-weight:bold; }
+
+        /* --- 헤더 및 내비게이션 --- */
+        header { background-color:#deb887; padding:20px; text-align:center; position:sticky; top:0; z-index:1000;}
+        header h1 { margin:0; color:white; font-size:1.8em;}
+        nav ul { list-style:none; padding:0; margin:10px 0 0 0; display:flex; justify-content:center; gap:25px; }
+        nav li { position:relative; }
+        nav a { text-decoration:none; color:white; font-weight:bold; padding:6px 12px; border-radius:6px; transition:background 0.3s; display:inline-block;}
+        nav a:hover { background-color:#c49a6c; }
+        nav ul ul { display:none; position:absolute; top:40px; left:0; background-color:#deb887; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.2); padding:8px 0; min-width:190px;}
+        nav ul ul a { color:white; padding:10px 15px; display:block; white-space:nowrap; }
+        nav li:hover>ul { display:block; }
+
+        /* --- 닉네임 & 채팅 --- */
+        #nickname-setup { padding:50px; text-align:center; }
+        #nickname-input { padding:10px; font-size:1.1em; margin-bottom:15px; width:80%; max-width:300px; border:2px solid #deb887; border-radius:6px;}
+        #set-nickname-button { background-color:#8b4513; color:white; border:none; padding:10px 20px; font-size:1.1em; cursor:pointer; border-radius:8px;}
+        #chat-container { display:none; width:100%; max-width:600px; margin:0 auto; box-shadow:0 2px 5px rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; background-color:#fffaf0;}
+        #chat-messages { height:400px; overflow-y:auto; padding:15px; text-align:left; background-color:#fcf8f0;}
+        .user-message { background-color:#ffdcb7; margin-left:auto; text-align:right; padding:5px 10px; border-radius:8px; margin-bottom:5px;}
+        .system-message { background-color:#e0e0e0; margin-right:auto; padding:5px 10px; border-radius:8px; margin-bottom:5px;}
+        .message-sender { font-size:0.8em; font-weight:bold; color:#8b4513; margin-bottom:2px; display:block;}
+        #chat-input-area { display:flex; border-top:1px solid #ccc;}
+        #chat-input { flex-grow:1; padding:10px; border:none; font-size:1em; outline:none;}
+        #chat-send-button { background-color:#deb887; color:white; border:none; padding:10px 15px; cursor:pointer; font-weight:bold;}
+
+        /* --- 탐구 활동 iframe --- */
+        #inquiry-iframe-container { width:100%; height:600px; max-width:900px; margin:0 auto; display:none; }
+        #division-iframe { width:100%; height:100%; border:1px solid #ccc; border-radius:10px;}
+
+        /* --- 푸터 --- */
+        footer { text-align:center; padding:15px; background-color:#deb887; color:white; margin-top:60px; }
+    </style>
+</head>
+<body>
+
+<div id="lock-screen">
+    <h2>수학 교과서 잠금 해제 🔒</h2>
+    <p>접속 코드를 입력해 주세요.</p>
+    <input type="password" id="password-input" placeholder="숫자 4자리" maxlength="4" onkeydown="if(event.key==='Enter') checkPassword()">
+    <button id="password-button" onclick="checkPassword()">확인</button>
+    <p id="error-message"></p>
+</div>
+
+<div id="content-wrapper">
+    <header>
+        <h1>탐구형 디지털 수학 교과서</h1>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="showContent('home'); return false;">홈</a></li>
+                <li>
+                    <a href="#">단원 학습 ▼</a>
+                    <ul>
+                        <li><a href="#unit1">1단원. 나머지가 있는 나눗셈</a></li>
+                        <li><a href="#unit2">2단원. 곱셈과 나눗셈의 관계</a></li>
+                        <li><a href="#unit3">3단원. 나눗셈 문제 해결하기</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">탐구 활동 ▼</a>
+                    <ul>
+                        <li><a href="#" onclick="showInquiry('apple_division.html'); return false;">1. 사과 나누기</a></li>
+                        <li><a href="#" onclick="showInquiry('sumo.html'); return false;">2. 수모형 조작하기</a></li>
+                        <li><a href="#" onclick="showInquiry('note.html'); return false;">3. 연습장 (Canvas)</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">평가하기 ▼</a>
+                    <ul>
+                        <li><a href="#" onclick="showContent('quiz_2_digit'); return false;">두 자릿수 나눗셈</a></li>
+                        <li><a href="#" onclick="showContent('quiz_3_digit'); return false;">세 자릿수 나눗셈</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" onclick="showChat(); return false;">토의·생각 나누기</a></li>
+                <li><a href="#">나의 학습</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="home-content">
+            <h2>함께 탐구하며 배우는 수학 🌟</h2>
+            <p>
+                수학 개념을 배우고, 스스로 탐구하며, 친구들과 생각을 나누는 공간이에요.<br>
+                여러분의 생각과 아이디어가 수학을 더 재미있게 만들어줍니다!
+            </p>
+        </div>
+
+        <div id="nickname-setup" style="display: none;">
+            <h2>닉네임 설정</h2>
+            <input type="text" id="nickname-input" placeholder="사용할 닉네임을 입력하세요" onkeydown="if(event.key==='Enter') setNickname()">
+            <button onclick="setNickname()" id="set-nickname-button">채팅 시작</button>
+        </div>
+        
+        <div id="quiz-2-digit-content" style="display: none;">
+            <h2>📝 두 자릿수 나눗셈 평가</h2>
+            <p>두 자릿수 나눗셈 실력을 점검해 봅시다! (평가 콘텐츠가 들어갈 영역입니다.)</p>
+        </div>
+        
+        <div id="quiz-3-digit-content" style="display: none;">
+            <h2>📝 세 자릿수 나눗셈 평가</h2>
+            <p>세 자릿수 나눗셈 실력을 점검해 봅시다! (평가 콘텐츠가 들어갈 영역입니다.)</p>
+        </div>
+
+        <div id="inquiry-iframe-container">
+            <iframe id="division-iframe" src="" title="탐구 활동"></iframe>
+        </div>
+
+        <div id="chat-container">
+            <div id="chat-messages">
+                <div class="message-bubble system-message">
+                    <span class="message-sender">시스템 알림</span>
+                    토의/토론 채팅방에 오신 것을 환영합니다!
+                </div>
+            </div>
+            <div id="chat-input-area">
+                <input type="text" id="chat-input" placeholder="메시지를 입력하세요..." onkeydown="if(event.key==='Enter') sendMessage()">
+                <button id="chat-send-button" onclick="sendMessage()">전송</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 탐구형 디지털 수학 교과서</p>
+    </footer>
+</div>
+
+<script>
+    // --- 1. 잠금 화면 ---
+    const CORRECT_PASSWORD = "1324";
+    const lockScreen = document.getElementById('lock-screen');
+    const contentWrapper = document.getElementById('content-wrapper');
+    const passwordInput = document.getElementById('password-input');
+    const errorMessage = document.getElementById('error-message');
+
+    function checkPassword() {
+        if(passwordInput.value === CORRECT_PASSWORD) {
+            lockScreen.style.display='none';
+            contentWrapper.style.display='block';
+            showContent('home');
+        } else {
+            errorMessage.textContent='잘못된 코드입니다. 다시 입력해 주세요.';
+            passwordInput.value='';
+            passwordInput.focus();
+        }
+    }
+    document.addEventListener('DOMContentLoaded', ()=>{ passwordInput.focus(); });
+
+    // --- 2. 섹션 전환 및 채팅 ---
+    const homeContent = document.getElementById('home-content');
+    const chatContainer = document.getElementById('chat-container'); 
+    const nicknameSetup = document.getElementById('nickname-setup');
+    const inquiryIframeContainer = document.getElementById('inquiry-iframe-container');
+    const quiz2DigitContent = document.getElementById('quiz-2-digit-content'); 
+    const quiz3DigitContent = document.getElementById('quiz-3-digit-content'); 
+    const divisionIframe = document.getElementById('division-iframe'); // iframe 요소 자체
+    
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const nicknameInput = document.getElementById('nickname-input');
+    let CURRENT_USER_NICKNAME = ''; 
+
+    function hideAllSections() {
+        homeContent.style.display='none';
+        chatContainer.style.display='none';
+        nicknameSetup.style.display='none';
+        inquiryIframeContainer.style.display='none';
+        quiz2DigitContent.style.display='none'; 
+        quiz3DigitContent.style.display='none'; 
+    }
+
+    // showContent 함수를 수정하여 '평가하기' 클릭 시 iframe으로 로드합니다.
+    function showContent(section){
+        hideAllSections();
+        
+        if(section==='home'){ 
+            homeContent.style.display='block'; 
+            divisionIframe.src = ''; // iframe 비우기
+        } 
+        
+        // '두 자릿수 나눗셈' 메뉴는 quiz_2_digit.html을 iframe에 로드합니다.
+        else if(section==='quiz_2_digit'){
+            inquiryIframeContainer.style.display='block';
+            divisionIframe.src = 'quiz_2_digit.html'; // 파일명 확인
+        } 
+        
+        // ★★★ '세 자릿수 나눗셈' 메뉴는 quiz_3_digit.html을 iframe에 로드합니다. (수정 완료)
+        else if(section==='quiz_3_digit'){
+            inquiryIframeContainer.style.display='block';
+            divisionIframe.src = 'quiz_3_digit.html'; // 실제 파일명 로드
+        }
+    }
+
+    // showInquiry 함수는 탐구 활동 파일 로드를 위해 별도로 유지합니다.
+    function showInquiry(fileName){
+        hideAllSections();
+        inquiryIframeContainer.style.display='block';
+        divisionIframe.src=fileName;
+    }
+
+    function showChat(){
+        hideAllSections();
+        if(CURRENT_USER_NICKNAME===''){
+            nicknameSetup.style.display='block';
+            nicknameInput.focus();
+        } else {
+            chatContainer.style.display='block';
+            chatMessages.scrollTop=chatMessages.scrollHeight;
+            chatInput.focus();
+        }
+    }
+
+    function setNickname(){
+        const nickname=nicknameInput.value.trim();
+        if(nickname.length<2 || nickname.length>10){ alert("닉네임은 2자 이상 10자 이하로 설정해 주세요."); nicknameInput.focus(); return; }
+        CURRENT_USER_NICKNAME=nickname;
+        nicknameSetup.style.display='none';
+        chatContainer.style.display='block';
+        receiveSystemMessage(`${CURRENT_USER_NICKNAME} 님이 채팅방에 입장했습니다.`);
+        chatInput.focus();
+    }
+
+    function sendMessage(){
+        const text=chatInput.value.trim();
+        if(text==="") return;
+        const bubble=document.createElement('div');
+        bubble.classList.add('message-bubble','user-message');
+        const sender=document.createElement('span');
+        sender.classList.add('message-sender');
+        sender.textContent=CURRENT_USER_NICKNAME;
+        bubble.appendChild(sender);
+        bubble.innerHTML+=text;
+        chatMessages.appendChild(bubble);
+        chatInput.value='';
+        chatMessages.scrollTop=chatMessages.scrollHeight;
+    }
+
+    function receiveSystemMessage(text){
+        const bubble=document.createElement('div');
+        bubble.classList.add('message-bubble','system-message');
+        const sender=document.createElement('span');
+        sender.classList.add('message-sender');
+        sender.textContent='시스템 알림';
+        bubble.appendChild(sender);
+        bubble.innerHTML+=text;
+        chatMessages.appendChild(bubble);
+        chatMessages.scrollTop=chatMessages.scrollHeight;
+    }
+</script>
+
+</body>
+</html>

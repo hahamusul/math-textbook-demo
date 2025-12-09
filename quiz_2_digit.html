@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>두 자릿수 나눗셈 평가</title>
+    <style>
+        body {
+            font-family: "나눔고딕", Arial, sans-serif;
+            text-align: center;
+            padding: 30px;
+            background-color: #e8f5e9;
+        }
+        h2 {
+            color: #2e7d32;
+            margin-bottom: 30px;
+        }
+        #quiz-area {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        #question {
+            font-size: 2.5em;
+            color: #1b5e20;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        .input-group {
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+        .input-group input[type="number"] {
+            padding: 8px;
+            font-size: 1.1em;
+            width: 80px;
+            text-align: center;
+            border: 2px solid #a5d6a7;
+            border-radius: 6px;
+        }
+        #check-button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+        }
+        #check-button:hover {
+            background-color: #388e3c;
+        }
+        #feedback {
+            margin-top: 25px;
+            font-size: 1.5em;
+            font-weight: bold;
+            min-height: 30px;
+        }
+        .correct {
+            color: #2e7d32;
+        }
+        .incorrect {
+            color: #d32f2f;
+        }
+        #next-button {
+            background-color: #1e88e5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>✏️ 두 자릿수 나눗셈 평가</h2>
+    
+    <div id="quiz-area">
+        <div id="question">-- ÷ --</div>
+        
+        <div class="input-group">
+            몫: <input type="number" id="quotient-input" placeholder="몫" min="0" onkeydown="if(event.key==='Enter') checkAnswer()">
+        </div>
+        <div class="input-group">
+            나머지: <input type="number" id="remainder-input" placeholder="나머지" min="0" onkeydown="if(event.key==='Enter') checkAnswer()">
+        </div>
+        
+        <button id="check-button" onclick="checkAnswer()">정답 확인</button>
+        <button id="next-button" onclick="generateQuestion()">다음 문제</button>
+
+        <div id="feedback"></div>
+    </div>
+
+    <script>
+        let correctAnswer = { quotient: 0, remainder: 0, divisor: 0 };
+        const questionDiv = document.getElementById('question');
+        const quotientInput = document.getElementById('quotient-input');
+        const remainderInput = document.getElementById('remainder-input');
+        const feedbackDiv = document.getElementById('feedback');
+        const checkButton = document.getElementById('check-button');
+        const nextButton = document.getElementById('next-button');
+
+        // 무작위 나눗셈 문제 생성 (두 자릿수 / 한 자릿수)
+        function generateQuestion() {
+            // 10 이상 99 이하의 피젯(나누어지는 수)
+            const dividend = Math.floor(Math.random() * 90) + 10;
+            // 2 이상 9 이하의 제수(나누는 수)
+            const divisor = Math.floor(Math.random() * 8) + 2;
+
+            // 정답 계산
+            const quotient = Math.floor(dividend / divisor);
+            const remainder = dividend % divisor;
+
+            correctAnswer = { quotient, remainder, divisor };
+            
+            // UI 업데이트
+            questionDiv.textContent = `${dividend} ÷ ${divisor}`;
+            quotientInput.value = '';
+            remainderInput.value = '';
+            feedbackDiv.textContent = '';
+            checkButton.style.display = 'block';
+            nextButton.style.display = 'none';
+            quotientInput.focus();
+        }
+
+        // 정답 확인 로직
+        function checkAnswer() {
+            const userQuotient = parseInt(quotientInput.value);
+            const userRemainder = parseInt(remainderInput.value);
+
+            if (isNaN(userQuotient) || isNaN(userRemainder)) {
+                feedbackDiv.textContent = "몫과 나머지를 모두 입력해 주세요.";
+                feedbackDiv.classList.add('incorrect');
+                feedbackDiv.classList.remove('correct');
+                return;
+            }
+
+            const isQuotientCorrect = userQuotient === correctAnswer.quotient;
+            const isRemainderCorrect = userRemainder === correctAnswer.remainder;
+            
+            // 나머지가 제수보다 크거나 같은지 확인 (나눗셈의 기본 원리 검사)
+            const isRemainderValid = userRemainder < correctAnswer.divisor;
+
+            if (isQuotientCorrect && isRemainderCorrect && isRemainderValid) {
+                feedbackDiv.textContent = "🎉 정답입니다! 🎉";
+                feedbackDiv.classList.add('correct');
+                feedbackDiv.classList.remove('incorrect');
+                
+                checkButton.style.display = 'none';
+                nextButton.style.display = 'block';
+                nextButton.focus();
+            } else {
+                feedbackDiv.textContent = "다시 시도해 보세요. (몫 또는 나머지가 올바르지 않거나, 나머지가 너무 큽니다.)";
+                feedbackDiv.classList.add('incorrect');
+                feedbackDiv.classList.remove('correct');
+                quotientInput.focus();
+            }
+        }
+
+        // 초기 문제 생성
+        generateQuestion();
+    </script>
+</body>
+</html>
